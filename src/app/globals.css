@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-pixel: "Press Start 2P", monospace;
+  --font-mono: "VT323", "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: #020803;
+  color: #33ff66;
+  font-family: var(--font-mono);
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* CRT scanline overlay — a thin moving highlight plus a static fine-line texture */
+.crt-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    rgba(0, 0, 0, 0) 2px
+  );
+}
+
+.crt-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(51, 255, 102, 0.06) 0%,
+    rgba(51, 255, 102, 0) 8%
+  );
+  animation: scanline 6s linear infinite;
+}
+
+.crt-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+
+.phosphor-text {
+  text-shadow: 0 0 2px currentColor, 0 0 8px rgba(51, 255, 102, 0.5);
+}
+
+.gold-glow {
+  text-shadow: 0 0 3px currentColor, 0 0 10px rgba(212, 175, 55, 0.6);
+}
+
+/* Pixelated rendering for crown/worker glyphs so they read as "pixel art" not emoji-soft */
+.pixelated {
+  image-rendering: pixelated;
+}
+
+::selection {
+  background: #33ff66;
+  color: #020803;
+}
+
+/* Chunky retro scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: #06120a;
+  border-left: 2px solid #1f4d2e;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f4d2e;
+  border: 2px solid #06120a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #33ff66;
+}
