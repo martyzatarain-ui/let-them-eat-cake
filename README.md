@@ -110,21 +110,29 @@ npm run start
 
 ---
 
-## Deploying to Vercel
+## Deploying to GitHub Pages
 
-1. Push this project to a GitHub (or GitLab/Bitbucket) repository.
-2. Go to [vercel.com/new](https://vercel.com/new) and import the repository.
-3. Vercel will auto-detect Next.js — no configuration changes are needed.
-4. Click **Deploy**.
+This project is configured to deploy automatically to GitHub Pages using GitHub Actions — once set up, you never need to run a build command yourself. Every time you push new code to the `main` branch, it rebuilds and republishes the site automatically.
 
-There are no required environment variables for this MVP. Future phases that add Supabase, analytics, or live data feeds will need their own env vars documented at that time.
+### One-time setup
 
-Alternatively, from the CLI:
+1. **Check the repo name matches the config.** Open `next.config.js` and confirm the `repoName` constant matches your actual GitHub repository name exactly (e.g. if your repo is `github.com/yourname/let-them-eat-cake`, `repoName` should be `"/let-them-eat-cake"`). If you renamed the repo, update this value and re-push.
+2. **Push this code to a GitHub repository** named to match (see `repoName` above).
+3. In your repository on GitHub, go to **Settings → Pages**.
+4. Under "Build and deployment," set **Source** to **"GitHub Actions"** (not "Deploy from a branch" — that's the older method and won't work with this setup).
+5. Push any commit to `main` (or go to the **Actions** tab and manually run the "Deploy to GitHub Pages" workflow).
+6. Wait 1–3 minutes. Check the **Actions** tab — when the workflow shows a green checkmark, your site is live.
+7. Your URL will be `https://<your-github-username>.github.io/<repo-name>/` (note the trailing slash matters).
 
-```bash
-npm install -g vercel
-vercel
-```
+### How this works under the hood
+
+- `next.config.js` is set to `output: 'export'`, which tells Next.js to pre-build every page into a plain HTML file at build time, since GitHub Pages can only serve static files (it has no ability to run a live server).
+- `.github/workflows/deploy.yml` is a GitHub Actions workflow: it automatically installs dependencies, runs the build, and publishes the result every time you push to `main`.
+- `public/.nojekyll` tells GitHub not to run its default Jekyll processing step, which would otherwise interfere with Next.js's `_next` folder.
+
+### If you'd rather use Vercel or Netlify instead
+
+This same codebase deploys to Vercel or Netlify without any of the GitHub Pages-specific configuration above — both of those platforms run a real server, so static export isn't required. If you switch later, just remove the `output`, `basePath`, and `assetPrefix` lines from `next.config.js` and import the repo into Vercel or Netlify as normal; both auto-detect Next.js with zero extra configuration.
 
 ---
 
